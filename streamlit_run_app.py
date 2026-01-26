@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import requests
 import joblib
 from sklearn.metrics import (accuracy_score,precision_score, recall_score, f1_score, roc_auc_score, matthews_corrcoef, confusion_matrix)
 
@@ -62,8 +63,10 @@ artifacts = load_artifacts()
 if artifacts:
     st.sidebar.header("Configuration")
     st.sidebar.subheader("Get Sample Data")
-    st.sidebar.markdown(f"")
-    st.sidebar.caption("Save this file and upload it below.")
+    test_data_url = "https://github.com/akn108/classifier-evaluation-project/blob/main/models/test_data.csv"
+    response = requests.get(test_data_url)
+    csv_data = response.content
+    st.sidebar.download_button(label="Download Test CSV", data=csv_data, file_name="test_data.csv", mime="text/csv")
     upload_data_file = st.sidebar.file_uploader("Upload Test Data (CSV File Only)", type=["csv"])
 
     model_names = {
@@ -106,7 +109,7 @@ if artifacts:
                     col3.metric("Recall", f"{recall_score(TARGET_TEST, TGT_PRED):.2f}")
                     col4.metric("F1 Score", f"{f1_score(TARGET_TEST, TGT_PRED):.2f}")
                     col5.metric("MCC ", f"{matthews_corrcoef(TARGET_TEST, TGT_PRED):.2f}")
-                    col5.metric("AUC ", f"{roc_auc_score(TARGET_TEST, TGT_PRED):.2f}")
+                    col6.metric("AUC ", f"{roc_auc_score(TARGET_TEST, TGT_PRED):.2f}")
 
                     # Now Creating COnfusion Matrix 
                     with st.container():
