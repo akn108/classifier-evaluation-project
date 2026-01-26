@@ -24,10 +24,8 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 
 # Function to clean the dataset
 def clean_input_data(url):
-    print("Data will be loaded from the url {url}")
+    print(f"Data will be loaded from the url {url}")
     df = pd.read_csv(url)
-    df = pd.to_numeric(df, errors='coerce')
-    df.fillna(0, inplace=True)
 
     return df
 
@@ -54,7 +52,7 @@ def preprocess_input_data(df):
 
     # Performing Scaling of Numerical Features for distance based algorithms
     scaler = StandardScaler()
-    DATA_FEATURES[numerical_cols] = scaler.fit_transform(DATA_FEATURES(numerical_cols))
+    DATA_FEATURES[numerical_cols] = scaler.fit_transform(DATA_FEATURES[numerical_cols])
 
     return DATA_FEATURES, DATA_TARGET, lencod, scaler, numerical_cols
     
@@ -86,14 +84,17 @@ def train_models():
     joblib.dump(scaler, os.path.join(MODEL_DIR, "scaler.pkl"))
     joblib.dump(numerical_cols, os.path.join(MODEL_DIR, "numerical_cols.pkl"))
 
-    # Step 3: Splitting the data into train and test datasets
+    # Step 3: Splitting the data into train and test datasets and savinf Test Data for future use
     print("\n Step 3: Splitting the data into train and test datasets")
-    DATA_FEATURES_Train, DATA_FEATURES_Test, DATA_TARGET_Train, DATA_TARGET_Test = train_test_split(DATA_FEATURES, DATA_TARGET, test_size=0.2, random_state=42, stratify=y)
+    DATA_FEATURES_Train, DATA_FEATURES_Test, DATA_TARGET_Train, DATA_TARGET_Test = train_test_split(DATA_FEATURES, DATA_TARGET, test_size=0.2, random_state=42, stratify=DATA_TARGET)
+    ## Saving the test data fir future use
+    raw_test_data = df.loc[DATA_FEATURES_Test.index]
+    raw_test_data.to_csv(os.path.join(MODEL_DIR, "test_data.csv"), index=False)
 
     # Step 4: Defining all the required models
     print("\n Step 4: Defining all the required models")
     models = {
-        "Logistic Regressin": LogisticRegression(max_iter1000),
+        "Logistic Regressin": LogisticRegression(max_iter=1000),
         "Decision Tree": DecisionTreeClassifier(random_state=42),
         "K-Nearest Neighbour": KNeighborsClassifier(n_neighbors=5),
         "Naive Bayes": GaussianNB(),
@@ -105,14 +106,14 @@ def train_models():
     print("\n Step 5: Train and evaluate all defined models")
     result = []
     for name, model in models.items():
-        print("Training {name}...")
+        print(f"Training {name}...")
         model.fit(DATA_FEATURES_Train, DATA_TARGET_Train)
 
-        print(" Saving {name}...")
-        mod_name = name.replace("","_").lower()
-        joblib.dump(model, os.path.join(MODEL_DIR,f"{mod_name}.pkl"))
+        print(f" Saving {name}...")
+        mod_name = name.replace(" ","_").lower()
+        joblib.dump(model, os.path.join(MODEL_DIR,f"{mod_name}.pkl"), compress=3)
 
-        print("Evaluating {name}....")
+        print(f"Evaluating {name}....")
         DATA_TARGET_Pred = model.predict(DATA_FEATURES_Test)
         if hasattr(model, "predict_proba"):
             DATA_TARGET_Predict_Proba = model.predict_proba(DATA_FEATURES_Test)[:,1]
@@ -132,11 +133,13 @@ def train_models():
             "Precision": prec,
             "Recall": recall,
             "F1 Score": f1,
-            "MCC": mcc
+            "MCC": mcc,
+            "AUC Score": auc
         })
 
         print("\n--------Model COmparison Summary--------")
         summary_df = pd.DataFrame(result).set_index("Model")
+        print(summary_df)
 
         print("\nModel Training Complete. Model saved to 'models/' directory")
 
