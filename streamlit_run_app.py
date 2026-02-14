@@ -63,7 +63,7 @@ artifacts = load_artifacts()
 if artifacts:
     st.sidebar.header("Configuration")
     st.sidebar.subheader("Get Sample Data")
-    test_data_url = "https://github.com/akn108/classifier-evaluation-project/blob/main/models/test_data.csv"
+    test_data_url = "https://raw.githubusercontent.com/akn108/classifier-evaluation-project/main/models/test_data.csv"
     response = requests.get(test_data_url)
     csv_data = response.content
     st.sidebar.download_button(label="Download Test CSV", data=csv_data, file_name="test_data.csv", mime="text/csv")
@@ -81,8 +81,11 @@ if artifacts:
     select_model = st.sidebar.selectbox("Select Model", list(model_names.keys()))
 
     if upload_data_file:
-        df_input = pd.read_csv(upload_data_file)
-        st.write(f"**Loaded Dataset:** {df_input.shape} Rows, {df_input.shape[1]} Columns")
+        try:
+            df_input = pd.read_csv(upload_data_file, on_bad_lines="skip")
+            st.write(f"**Loaded Dataset:** {df_input.shape} Rows, {df_input.shape[1]} Columns")
+        except pd.errors.ParserError:
+            st.error("CSV parsing failed. Try checking the delimiter or file format.")
 
         with st.expander("View Sample Raw Data"):
             st.dataframe(df_input.head())

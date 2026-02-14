@@ -69,39 +69,3 @@ classifier-evaluation-project/
 
 ```
 
-## How to Setup
-
-
-### Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd ml-classification-comparison
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Download the dataset**
-   ```bash
-   python download_dataset.py
-   ```
-   Alternatively, download manually from [UCI ML Repository](https://archive.ics.uci.edu/ml/datasets/wine+quality) and save as `winequality-red.csv` in the project root.
-
-4. **Train the models**
-   ```bash
-   python train_models.py
-   ```
-   This will:
-   - Load and preprocess the dataset
-   - Train all 6 models
-   - Calculate evaluation metrics
-   - Save models and metrics to the `model/` directory
-
-5. **Run the Streamlit app locally**
-   ```bash
-   streamlit run streamlit_app.py
-   ```
