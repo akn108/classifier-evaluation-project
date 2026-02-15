@@ -29,23 +29,23 @@ The following six supervised machine learning models were implemented and evalua
 
 | ML Model Name | Accuracy | AUC | Precision | Recall | F1 Score | MCC |
 | --- | --- | --- | --- | --- | --- | --- |
-| Logistic Regression | Row 1, Col 2 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 |
-| Decision Tree | Row 1, Col 2 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 |
-| K-NN | Row 1, Col 2 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 |
-| Naive Bayes | Row 1, Col 2 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 |
-| Random Forest (Ensemble) | Row 1, Col 2 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 |
-| XGBoost (Ensemble)  | Row 1, Col 2 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 | Row 1, Col 3 |
+| Logistic Regression | 0.80 | 0.71 | 0.63 | 0.54 | 0.59 | 0.45 |
+| Decision Tree | 0.77 | 0.68 | 0.57 | 0.51 | 0.54 | 0.38 |
+| K-NN |  0.77 | 0.70 | 0.56 | 0.56 | 0.56 | 0.40 |
+| Naive Bayes | 0.28 | 0.50 | 0.26 | 0.95 | 0.41 | -0.02 |
+| Random Forest (Ensemble) | 0.80 | 0.69 | 0.68 | 0.46 | 0.55 |0.44 |
+| XGBoost (Ensemble)  |0.79 | 0.71 | 0.61 | 0.54 | 0.57 | 0.43 |
 
 
 ### Observations on the performance of each model
 | ML Model Name | Observation about model performance | 
 | --- | --- | 
-| Logistic Regression | Row 1, Col 2 |
-| Decision Tree | Row 1, Col 2 |
-| K-NN | Row 1, Col 2 |
-| Naive Bayes | Row 1, Col 2 |
-| Random Forest (Ensemble) |
-| XGBoost (Ensemble)  | Row 1, Col 2 |
+| Logistic Regression | Accuracy is 0.80 and AUC is 0.71, which shows good overall performance. Precision (0.63) and recall (0.54) are fairly balanced. Easy to understand model, but it misses some churn cases. |
+| Decision Tree | Accuracy is 0.77 and AUC is 0.68, a bit lower than Logistic Regression. Precision (0.57) and recall (0.51) are weaker, meaning more mistakes. Tends to overfit, so not very reliable. |
+| K-NN | Accuracy is 0.77 and AUC is 0.70, similar to Decision Tree. Precision and recall are both 0.56, so it’s balanced but average. Needs careful tuning of K value to improve results. |
+| Naive Bayes | Accuracy is very low (0.28) but recall is very high (0.95). This means it predicts almost everyone as churn, but precision is poor (0.26). MCC is negative (-0.02), showing weak correlation. Not suitable for this dataset. |
+| Random Forest (Ensemble) |Accuracy is 0.80, same as Logistic Regression. Precision is high (0.68) but recall is low (0.46), so it correctly predicts churn when it says so, but misses many actual churners. Good if false positives are costly.|
+| XGBoost (Ensemble)  | Accuracy is 0.79 and AUC is 0.71, close to Logistic Regression. Precision (0.61) and recall (0.54) are balanced. Handles complex data well and is a strong candidate for deployment. |
 
 ## The Project(Code) Structure
 ```
